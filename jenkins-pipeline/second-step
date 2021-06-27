@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    environment {
+            NAME = 'Tanisha'
+            LASTNAME = 'Bharol'
+        }
+    stages {
+        
+        stage('Build') {
+            steps {
+                sh 'echo $NAME $LASTNAME'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo "My first pipeline"'
+                sh '''
+                    echo "By the way, I can do more stuff in here"
+                    ls -lah
+                '''
+                sh 'python3 --version'
+            }
+        }
+    }
+}
