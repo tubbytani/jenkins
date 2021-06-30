@@ -1,0 +1,77 @@
+job('job_dsl_created') {
+
+    description('This is the description of my DSL job')
+    parameters {
+        stringParam('Planet', defaultValue = 'world', description = 'This is the world')
+  	    booleanParam('FLAG', true)
+        choiceParam('OPTION', ['option 1 (default)', 'option 2', 'option 3'])
+    }
+    scm {
+        git('https://github.com/jenkins-docs/simple-java-maven-app', 'master')
+    }
+    triggers {
+        cron('H 5 * * 7')
+    }
+    steps {
+        shell("""
+echo 'Hello World'
+echo 'This is second command'
+""")
+    }
+    publishers {
+        mailer('joylittle456@gmail.com', false, true)
+    }
+}
+job('maven_dsl') {
+
+    description('Maven dsl project')
+
+    scm {
+        git('https://github.com/jenkins-docs/simple-java-maven-app', 'master', {node -> node / 'extensions' << '' })
+    }
+  
+    steps {
+        maven {
+            mavenInstallation('jenkins-maven')
+            goals('-B -DskipTests clean package')
+        }
+        maven {
+            mavenInstallation('jenkins-maven')
+            goals('test')
+        }
+        shell('''
+            echo ************RUNNING THE JAR************************     
+            java -jar /var/jenkins_home/workspace/maven_dsl/target/my-app-1.0-SNAPSHOT.jar
+        ''')
+    }
+
+    publishers {
+        archiveArtifacts('target/*.jar')
+        archiveJunit('target/surefire-reports/*.xml')
+        mailer('---', true, true)
+    }
+job('job_created_by_gitlab_V3') {
+
+    description('This is the description of my DSL job')
+    parameters {
+        stringParam('Planet', defaultValue = 'world', description = 'This is the world')
+  	    booleanParam('FLAG', true)
+        choiceParam('OPTION', ['option 1 (default)', 'option 2', 'option 3'])
+    }
+    scm {
+        git('https://github.com/jenkins-docs/simple-java-maven-app', 'master')
+    }
+    triggers {
+        cron('H 5 * * 7')
+    }
+    steps {
+        shell("""
+echo 'Hello World'
+echo 'This is second command'
+""")
+    }
+    publishers {
+        mailer('---', false, true)
+    }
+}
+}
